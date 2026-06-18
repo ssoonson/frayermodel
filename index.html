@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>기후 변화 프레이어 모델 학습방</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .frayer-grid {
             display: grid;
@@ -18,75 +19,121 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        /* 이미지 저장 시 깨짐 방지 및 부드러운 스타일링 */
+        textarea {
+            scrollbar-width: thin;
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center p-6">
+<body class="bg-slate-100 min-h-screen flex flex-col items-center p-6 text-slate-800">
 
-    <header class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-slate-800 mb-2">🌍 에듀테크 프레이어 모델</h1>
-        <p class="text-slate-600">제시된 핵심어에 대한 나의 생각을 사방의 칸에 채워보세요.</p>
+    <header class="text-center mb-6 max-w-2xl">
+        <h1 class="text-3xl font-extrabold text-slate-900 mb-2">🌍 기후 변화 프레이어 모델</h1>
+        <p class="text-sm text-slate-600">네 가지 칸을 성실하게 채운 후, 하단의 <b>'이미지 저장하기'</b> 버튼을 눌러 결과물을 다운로드하세요!</p>
     </header>
 
-    <main class="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-md relative">
+    <div id="capture-area" class="w-full max-w-4xl bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
         
-        <div class="frayer-grid min-h-[500px]">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-100 pb-4 mb-6 gap-3">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-xl font-bold text-slate-700">나의 프레이어 모델 생각 그물</h2>
+            </div>
+            <div class="flex gap-2 w-full sm:w-auto">
+                <input type="text" id="student-info" class="w-full sm:w-64 px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:outline-slate-500 bg-slate-50" placeholder="학년 반 번호 이름 입력 (예: 5-1 24번 홍길동)">
+            </div>
+        </div>
+
+        <div class="frayer-grid min-h-[520px]">
             
-            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 flex flex-col">
-                <label class="font-bold text-emerald-800 mb-2 text-lg">📝 1. 정의 (Definition)</label>
-                <textarea id="definition" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-emerald-500 resize-none" placeholder="기후 변화란 무엇일까요? 나만의 말로 뜻을 적어보세요."></textarea>
+            <div class="bg-emerald-50/70 p-5 rounded-xl border-2 border-emerald-200/80 flex flex-col shadow-sm">
+                <label class="font-bold text-emerald-800 mb-2 text-base flex items-center gap-1">
+                    <span>📝</span> 1. 정의 (Definition)
+                </label>
+                <textarea id="definition" class="w-full flex-grow p-3 bg-white border border-slate-200 rounded-lg focus:outline-emerald-500 text-sm leading-relaxed resize-none shadow-inner" placeholder="기후 변화란 무엇일까요? 장기간에 걸쳐 일어나는 지구의... 나의 말로 뜻을 적어보세요."></textarea>
             </div>
 
-            <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 flex flex-col">
-                <label class="font-bold text-blue-800 mb-2 text-lg">✨ 2. 특징 (Characteristics)</label>
-                <textarea id="characteristics" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-blue-500 resize-none" placeholder="기후 변화가 일어나면 어떤 현상이나 성질이 나타나나요?"></textarea>
+            <div class="bg-blue-50/70 p-5 rounded-xl border-2 border-blue-200/80 flex flex-col shadow-sm">
+                <label class="font-bold text-blue-800 mb-2 text-base flex items-center gap-1">
+                    <span>✨</span> 2. 특징 (Characteristics)
+                </label>
+                <textarea id="characteristics" class="w-full flex-grow p-3 bg-white border border-slate-200 rounded-lg focus:outline-blue-500 text-sm leading-relaxed resize-none shadow-inner" placeholder="지구 온도가 서서히 상승함, 온실가스가 주된 원인임, 전 세계적인 기상이변 발생 등 고유한 성질을 적어보세요."></textarea>
             </div>
 
-            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col">
-                <label class="font-bold text-amber-800 mb-2 text-lg">💡 3. 예시 (Examples)</label>
-                <textarea id="examples" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-amber-500 resize-none" placeholder="기후 변화의 구체적인 현상이나 원인 사례를 적어보세요. (예: 빙하 감소)"></textarea>
+            <div class="bg-amber-50/70 p-5 rounded-xl border-2 border-amber-200/80 flex flex-col shadow-sm">
+                <label class="font-bold text-amber-800 mb-2 text-base flex items-center gap-1">
+                    <span>💡</span> 3. 예시 (Examples)
+                </label>
+                <textarea id="examples" class="w-full flex-grow p-3 bg-white border border-slate-200 rounded-lg focus:outline-amber-500 text-sm leading-relaxed resize-none shadow-inner" placeholder="기후 변화를 보여주는 실제 사례나 현상은 무엇일까요? (예: 북극곰의 터전 상실, 해수면 상승, 폭염과 가뭄의 장기화)"></textarea>
             </div>
 
-            <div class="bg-rose-50 p-4 rounded-xl border border-rose-200 flex flex-col">
-                <label class="font-bold text-rose-800 mb-2 text-lg">❌ 4. 비예시 (Non-examples)</label>
-                <textarea id="nonExamples" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-rose-500 resize-none" placeholder="날씨 변화와 헷갈리기 쉽지만, 기후 변화가 '아닌' 것은 무엇일까요? (예: 내일 비가 오는 것)"></textarea>
+            <div class="bg-rose-50/70 p-5 rounded-xl border-2 border-rose-200/80 flex flex-col shadow-sm">
+                <label class="font-bold text-rose-800 mb-2 text-base flex items-center gap-1">
+                    <span>❌</span> 4. 비예시 (Non-examples)
+                </label>
+                <textarea id="nonExamples" class="w-full flex-grow p-3 bg-white border border-slate-200 rounded-lg focus:outline-rose-500 text-sm leading-relaxed resize-none shadow-inner" placeholder="헷갈리기 쉽지만 기후 변화가 '아닌' 현상은? (예: 내일 오후에 내리는 소나기, 한여름 밤의 일시적인 열대야 등 단순 날씨 변화)"></textarea>
             </div>
 
-            <div class="center-circle bg-slate-800 text-white px-6 py-4 rounded-full border-4 border-white shadow-lg text-center min-w-[160px]">
-                <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider">Core Concept</span>
-                <span class="text-xl font-extrabold">기후 변화</span>
+            <div class="center-circle bg-slate-800 text-white px-5 py-4 rounded-full border-4 border-white shadow-xl text-center min-w-[150px]">
+                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-widest mb-0.5">Core Concept</span>
+                <span class="text-lg font-black tracking-tight">기후 변화</span>
             </div>
 
         </div>
+    </div>
 
-        <div class="mt-6 flex justify-end gap-3">
-            <button onclick="resetForm()" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition">초기화</button>
-            <button onclick="submitModel()" class="px-5 py-2.5 bg-slate-850 text-white font-medium rounded-lg hover:bg-slate-900 transition shadow-sm">제출하기 완료</button>
-        </div>
-    </main>
+    <div class="w-full max-w-4xl mt-5 flex justify-between items-center px-2">
+        <button onclick="resetForm()" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-medium text-sm rounded-xl hover:bg-slate-300 transition duration-150">
+            🔄 내용 초기화
+        </button>
+        <button onclick="downloadAsImage()" class="px-6 py-2.5 bg-indigo-650 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition duration-150 shadow-md hover:shadow-lg flex items-center gap-2">
+            💾 이미지 카드 저장하기
+        </button>
+    </div>
 
     <script>
-        function submitModel() {
-            const data = {
-                definition: document.getElementById('definition').value,
-                characteristics: document.getElementById('characteristics').value,
-                examples: document.getElementById('examples').value,
-                nonExamples: document.getElementById('nonExamples').value
-            };
+        function downloadAsImage() {
+            const studentInfo = document.getElementById('student-info').value.trim();
+            const definition = document.getElementById('definition').value.trim();
+            const characteristics = document.getElementById('characteristics').value.trim();
+            const examples = document.getElementById('examples').value.trim();
+            const nonExamples = document.getElementById('nonExamples').value.trim();
 
-            if(!data.definition || !data.characteristics || !data.examples || !data.nonExamples) {
-                alert('네 가지 칸을 모두 입력한 후 제출해 주세요! 😉');
+            // 간단한 입력 검증
+            if (!studentInfo) {
+                alert('소속과 이름을 먼저 입력해야 이미지를 저장할 수 있습니다! 🧑‍💻');
+                return;
+            }
+            if (!definition || !characteristics || !examples || !nonExamples) {
+                alert('네 가지 영역을 모두 작성해 주세요! 😉');
                 return;
             }
 
-            console.log('학생 제출 데이터:', data);
-            alert('성공적으로 제출되었습니다! 교사 대시보드로 전송됩니다.');
+            // 캡처 진행 중 버튼 오작동 방지를 위한 안내
+            const target = document.getElementById('capture-area');
             
-            // TODO: google.script.run을 활용해 스프레드시트로 데이터를 보내는 로직을 여기에 연결할 수 있습니다.
+            // html2canvas 옵션 설정: 해상도를 높여 글씨가 깨지지 않게 scale 조정
+            html2canvas(target, {
+                scale: 2, 
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                // 다운로드 링크 생성
+                const link = document.createElement('a');
+                link.download = `기후변화_프레이어모델_${studentInfo}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                console.error('이미지 생성 실패:', err);
+                alert('이미지 저장 중 오류가 발생했습니다. 브라우저를 확인해 주세요.');
+            });
         }
 
         function resetForm() {
-            if(confirm('작성하던 내용을 모두 지우시겠습니까?')) {
+            if (confirm('작성 중인 모델 내용과 학생 정보를 모두 지우시겠습니까?')) {
+                document.getElementById('student-info').value = '';
                 document.getElementById('definition').value = '';
                 document.getElementById('characteristics').value = '';
                 document.getElementById('examples').value = '';

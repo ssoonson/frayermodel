@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기후 변화 프레이어 모델 학습방</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .frayer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 16px;
+            position: relative;
+        }
+        .center-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center p-6">
+
+    <header class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-slate-800 mb-2">🌍 에듀테크 프레이어 모델</h1>
+        <p class="text-slate-600">제시된 핵심어에 대한 나의 생각을 사방의 칸에 채워보세요.</p>
+    </header>
+
+    <main class="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-md relative">
+        
+        <div class="frayer-grid min-h-[500px]">
+            
+            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 flex flex-col">
+                <label class="font-bold text-emerald-800 mb-2 text-lg">📝 1. 정의 (Definition)</label>
+                <textarea id="definition" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-emerald-500 resize-none" placeholder="기후 변화란 무엇일까요? 나만의 말로 뜻을 적어보세요."></textarea>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 flex flex-col">
+                <label class="font-bold text-blue-800 mb-2 text-lg">✨ 2. 특징 (Characteristics)</label>
+                <textarea id="characteristics" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-blue-500 resize-none" placeholder="기후 변화가 일어나면 어떤 현상이나 성질이 나타나나요?"></textarea>
+            </div>
+
+            <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col">
+                <label class="font-bold text-amber-800 mb-2 text-lg">💡 3. 예시 (Examples)</label>
+                <textarea id="examples" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-amber-500 resize-none" placeholder="기후 변화의 구체적인 현상이나 원인 사례를 적어보세요. (예: 빙하 감소)"></textarea>
+            </div>
+
+            <div class="bg-rose-50 p-4 rounded-xl border border-rose-200 flex flex-col">
+                <label class="font-bold text-rose-800 mb-2 text-lg">❌ 4. 비예시 (Non-examples)</label>
+                <textarea id="nonExamples" class="w-full flex-grow p-3 border border-slate-200 rounded-lg focus:outline-rose-500 resize-none" placeholder="날씨 변화와 헷갈리기 쉽지만, 기후 변화가 '아닌' 것은 무엇일까요? (예: 내일 비가 오는 것)"></textarea>
+            </div>
+
+            <div class="center-circle bg-slate-800 text-white px-6 py-4 rounded-full border-4 border-white shadow-lg text-center min-w-[160px]">
+                <span class="text-xs text-slate-400 block font-semibold uppercase tracking-wider">Core Concept</span>
+                <span class="text-xl font-extrabold">기후 변화</span>
+            </div>
+
+        </div>
+
+        <div class="mt-6 flex justify-end gap-3">
+            <button onclick="resetForm()" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition">초기화</button>
+            <button onclick="submitModel()" class="px-5 py-2.5 bg-slate-850 text-white font-medium rounded-lg hover:bg-slate-900 transition shadow-sm">제출하기 완료</button>
+        </div>
+    </main>
+
+    <script>
+        function submitModel() {
+            const data = {
+                definition: document.getElementById('definition').value,
+                characteristics: document.getElementById('characteristics').value,
+                examples: document.getElementById('examples').value,
+                nonExamples: document.getElementById('nonExamples').value
+            };
+
+            if(!data.definition || !data.characteristics || !data.examples || !data.nonExamples) {
+                alert('네 가지 칸을 모두 입력한 후 제출해 주세요! 😉');
+                return;
+            }
+
+            console.log('학생 제출 데이터:', data);
+            alert('성공적으로 제출되었습니다! 교사 대시보드로 전송됩니다.');
+            
+            // TODO: google.script.run을 활용해 스프레드시트로 데이터를 보내는 로직을 여기에 연결할 수 있습니다.
+        }
+
+        function resetForm() {
+            if(confirm('작성하던 내용을 모두 지우시겠습니까?')) {
+                document.getElementById('definition').value = '';
+                document.getElementById('characteristics').value = '';
+                document.getElementById('examples').value = '';
+                document.getElementById('nonExamples').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
